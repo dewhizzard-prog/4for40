@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ManLikeWales@40 — Master Logistics Dashboard</title>
+  <title>ManLikeWales@40 — Operation 4 for 40 Master Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -13,6 +13,8 @@
     .glass-card-hover:hover { border-color: rgba(59, 130, 246, 0.4); transform: translateY(-2px); transition: all 0.2s ease; }
     .tab-active { border-bottom: 3px solid #3b82f6; color: #3b82f6; font-weight: 700; }
     .subtab-active { background-color: #3b82f6; color: #ffffff; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="min-h-screen pb-12">
@@ -21,14 +23,14 @@
   <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-40 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-500/20">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-amber-500 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-500/20">
           40
         </div>
         <div>
           <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
             ManLikeWales@40 <span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/20 font-semibold">Operation 4 for 40</span>
           </h1>
-          <p class="text-xs text-slate-400">4 Countries • July 06 – July 20, 2027 • Live Logistics Tracker</p>
+          <p class="text-xs text-slate-400">4 Countries • July 06 – July 20, 2027 • Live Trip Dashboard</p>
         </div>
       </div>
 
@@ -61,14 +63,14 @@
         <div class="flex justify-between items-start mb-2">
           <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Active Travelers</span>
           <span class="bg-blue-500/20 text-blue-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1">
-            <i class="fa-solid fa-plane-lock text-[9px]"></i> View Ticket Status
+            <i class="fa-solid fa-plane-lock text-[9px]"></i> View Roster
           </span>
         </div>
         <div class="text-3xl font-black text-white group-hover:text-blue-400 transition-colors flex items-baseline gap-2">
           16 Guests <span class="text-xs font-bold text-emerald-400">(4 Locked IN)</span>
         </div>
         <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
-          <i class="fa-solid fa-users text-blue-400"></i> Click for flight ticket breakdown
+          <i class="fa-solid fa-users text-blue-400"></i> Click for flight ticket status & roster
         </p>
       </div>
 
@@ -123,9 +125,9 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
         <div>
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-bed text-blue-400"></i> Master Guest Cost & Allocation Summary
+            <i class="fa-solid fa-bed text-blue-400"></i> Master Guest Allocation & Cost Summary
           </h2>
-          <p class="text-xs text-slate-400">Individual accommodation expense totals and flight ticket status per guest</p>
+          <p class="text-xs text-slate-400">Individual accommodation room assignments, ticket lock status, and calculated totals</p>
         </div>
         <input type="text" id="rosterSearch" onkeyup="filterRoster()" placeholder="Search guest name..." class="bg-slate-900 border border-slate-700 text-xs text-white rounded-lg px-3 py-2 w-full sm:w-64 focus:outline-none focus:border-blue-500">
       </div>
@@ -140,7 +142,7 @@
               <th class="p-3">🇺🇬 Kampala</th>
               <th class="p-3">🇹🇿 Dar es Salaam</th>
               <th class="p-3">🇰🇪 Nairobi</th>
-              <th class="p-3 text-right rounded-r-lg">Est. Total Cost</th>
+              <th class="p-3 text-right rounded-r-lg">Est. Accommodation Total</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-800/60 font-medium" id="matrixTableBody">
@@ -148,7 +150,7 @@
           </tbody>
         </table>
       </div>
-      <p class="text-[11px] text-slate-500 italic">*Excludes unassigned or self-sorting legs where room bookings are handled independently or pending unit confirmation.</p>
+      <p class="text-[11px] text-slate-500 italic">*Excludes self-sorting guests and unassigned legs where booking unit pricing is pending final confirmation.</p>
     </section>
 
   </main>
@@ -163,9 +165,9 @@
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pr-6">
         <div>
           <h3 class="text-xl font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-users text-blue-400"></i> Active Traveler Roster (16)
+            <i class="fa-solid fa-users text-blue-400"></i> ManLikeWales@40 Guest Roster (16)
           </h3>
-          <p class="text-xs text-slate-400">Track flight ticket purchases and room allocations</p>
+          <p class="text-xs text-slate-400">Flight ticket status and attending legs breakdown</p>
         </div>
         
         <!-- TICKET FILTER BUTTONS -->
@@ -188,7 +190,7 @@
     const fxSymbols = { AUD: '$', USD: '$', CAD: '$', GBP: '£', CHF: 'Fr', NGN: '₦' };
     let currentFX = 'AUD';
 
-    // ACTIVE TRAVELERS DATA
+    // ACTIVE TRAVELERS DATA (EXACT ROSTER)
     const activeTravelers = [
       { name: "Adewale", ticket: "locked", legs: "All 4 Countries", rwanda: "Villa (BR 1)", uganda: "Unit 1", tanzania: "Unit 1", kenya: "Unit 1", costAud: 1605 },
       { name: "Sheriff", ticket: "locked", legs: "All 4 Countries", rwanda: "Villa (BR 2)", uganda: "Unit 2", tanzania: "Unit 1", kenya: "Unit 3", costAud: 1605 },
@@ -209,7 +211,7 @@
       { name: "Niyi", ticket: "pending", legs: "Tanzania, Kenya", rwanda: "—", uganda: "—", tanzania: "Unassigned", kenya: "Unassigned", costAud: 0 }
     ];
 
-    // COUNTRY DATA MATRIX WITH GOKARTING IN ALL COUNTRIES
+    // COUNTRY DATA MATRIX WITH 4 SUBTABS INCLUDING TOURNAMENTS & GAMES
     const countryData = {
       rwanda: {
         flag: "🇷🇼", name: "Rwanda (Kigali)", dates: "Jul 06 – Jul 09 (3 Nights)",
@@ -219,16 +221,20 @@
           { name: "Kigali Combined Block (3 BR)", link: "https://www.airbnb.com.au/rooms/1742683478719031917", guests: ["Nick ⏳", "Anthony ⏳", "Charles ⏳"], audPp: 316.67 },
           { name: "4-Bedroom Unit (New Addition)", link: "#", guests: ["Dilligaf ⏳", "Toyeeb ⏳", "Open Bedroom", "Open Bedroom"], audPp: 0 }
         ],
+        games: [
+          { title: "Kigali Go-Kart Time Trial 🏎️", points: "25 Pts (1st) / 18 Pts (2nd) / 15 Pts (3rd)", rules: "10-lap solo qualifier against the clock. Fastest lap times advance to Kampala Finals.", venue: "Fazenda Karting Circuit" },
+          { title: "Mount Kigali Push-Up & Plank Challenge 🏋️‍♂️", points: "15 Points Winner Bonus", rules: "Max push-ups in 2 minutes + longest wall-sit/plank on Mount Kigali summit.", venue: "Mount Kigali Adventure Center" },
+          { title: "Kigali Strike-Out Bowling Cup 🎳", points: "20 Pts (1st) / 14 Pts (2nd)", rules: "2-frame handicap tournament. Highest aggregate individual score wins.", venue: "Kigali Entertainment Center Bowling Alley" }
+        ],
         highlights: [
-          { title: "Kigali Go-Kart Qualifier 🏎️", category: "Racing", desc: "Round 1 of the 4-country Go-Kart series time trial." },
           { title: "Kigali Genocide Memorial & Inema Arts", category: "Culture & History", desc: "A moving tribute to Rwanda's history followed by a tour of Kigali's top contemporary art gallery." },
           { title: "Mount Kigali Adventure Park", category: "Adventure", desc: "Outdoor zip-lining, horseback riding, and archery at Fazenda Sengha." },
-          { title: "Decade Birthday Party 🥳", category: "Party", desc: "Decade-themed birthday bash celebrating ManLikeWales@40 at a premier Kigali venue." }
+          { title: "Decade Birthday Party 🥳", category: "Party", desc: "Decade-themed birthday bash celebrating ManLikeWales@40 at a premier Kigali lounge." }
         ],
         itinerary: [
           { day: "Day 1 (Jul 06)", title: "Arrival & Kigali Welcome", desc: "Arrive at Kigali International Airport. Check-in to residences. Welcome dinner and drinks in Kimihurura." },
-          { day: "Day 2 (Jul 07)", title: "Culture & Go-Kart Qualifier 🏎️", desc: "Morning visit to Genocide Memorial & Inema Arts. Afternoon Kigali Go-Kart Time Trial." },
-          { day: "Day 3 (Jul 08)", title: "Mount Kigali & Decade Party", desc: "Day activities at Mount Kigali. Evening Decade-Themed Birthday Party celebration." },
+          { day: "Day 2 (Jul 07)", title: "Culture, Bowling & Go-Kart Qualifier 🏎️🎳", desc: "Morning Genocide Memorial & Inema Arts. Afternoon Kigali Go-Kart Time Trial & Strike-Out Bowling Cup." },
+          { day: "Day 3 (Jul 08)", title: "Mount Kigali Fitness Challenge & Decade Party 🏋️‍♂️🥳", desc: "Day activities at Mount Kigali + Summit Fitness Challenge. Evening Decade-Themed Birthday Party celebration." },
           { day: "Day 4 (Jul 09)", title: "Departure to Kampala", desc: "Morning check-out and flight to Entebbe/Kampala, Uganda." }
         ]
       },
@@ -238,15 +244,20 @@
         properties: [
           { name: "Kololo 2-Bedroom Apartment Block (4 Units Booked)", link: "https://www.airbnb.com.au/rooms/992772718929728730", guests: ["Unit 1: Adewale 🔒 & Akeem ⏳", "Unit 2: Sheriff 🔒 & Nick ⏳", "Unit 3: Charles ⏳ & Anthony ⏳", "Unit 4: Olumide ⏳ & Dilligaf ⏳"], audPp: 235 }
         ],
+        games: [
+          { title: "Kampala Go-Kart Grand Prix 🏎️", points: "35 Pts (1st) / 25 Pts (2nd) / 20 Pts (3rd)", rules: "Grid start based on Kigali times. 15-lap wheel-to-wheel race with podium trophy ceremony.", venue: "Kampala Speed Speedway" },
+          { title: "Nile River Quad Bike & Endurance Run 🏃‍♂️", points: "20 Points Winner Bonus", rules: "5km Nile trail endurance run paired with quad bike obstacle course points.", venue: "Jinja Nile Banks" },
+          { title: "Kampala Bowling Masters 🎳", points: "25 Points Champion Winner", rules: "Tournament bracket eliminator. Strikes count double towards total points tally.", venue: "Acacia Mall Bowling Arena" }
+        ],
         highlights: [
-          { title: "Kampala Go-Kart Grand Prix 🏎️", category: "Group Activity", desc: "Round 2: High-octane group racing tournament at Kampala's top karting track." },
           { title: "Jinja & Source of the Nile 🌊", category: "Excursion", desc: "Full-day trip to Jinja, quad biking along the Nile banks, and boat cruises." },
-          { title: "Kololo & Acacia Avenue Nightlife", category: "Nightlife", desc: "Experiencing Kampala's famously legendary club and lounge scene." }
+          { title: "Kololo & Acacia Avenue Nightlife", category: "Nightlife", desc: "Experiencing Kampala's famously legendary club and lounge scene." },
+          { title: "Go-Kart Podium Party 🍾", category: "Celebration", desc: "Post-race trophy presentation and champagne toast for tournament leaders." }
         ],
         itinerary: [
           { day: "Day 4 (Jul 09)", title: "Arrival & Kololo Check-In", desc: "Arrive from Kigali via Entebbe Airport. Check-in to Kololo apartments. Evening relaxed dinner." },
-          { day: "Day 5 (Jul 10)", title: "Kampala Go-Kart Grand Prix 🏎️", desc: "Afternoon Go-Karting championship race followed by group dinner and night out." },
-          { day: "Day 6 (Jul 11)", title: "Saturday Jinja Nile Excursion 🌊", desc: "Full-day trip to Jinja (Source of the Nile) with quad biking and boat tour." },
+          { day: "Day 5 (Jul 10)", title: "Kampala Go-Kart Grand Prix & Bowling Masters 🏎️🎳", desc: "Afternoon Go-Karting Grand Prix followed by evening Bowling Tournament and night out." },
+          { day: "Day 6 (Jul 11)", title: "Nile Excursion & Quad Bike Endurance Challenge 🏃‍♂️🌊", desc: "Full-day trip to Jinja (Source of the Nile) featuring Nile Quad Bike & Endurance Challenge." },
           { day: "Day 7 (Jul 12)", title: "Departure to Dar es Salaam", desc: "Check-out and flight to Dar es Salaam, Tanzania." }
         ]
       },
@@ -256,15 +267,20 @@
         properties: [
           { name: "Dar es Salaam Apartments (3x 3-BR + 1x 4-BR)", link: "https://www.airbnb.com.au/rooms/1174483643076432401", guests: ["Unit 1 (3 BR): Adewale 🔒, Akeem ⏳, Sheriff 🔒", "Unit 2 (3 BR): Saheed ⏳, Nick ⏳, Charles ⏳", "Unit 3 (3 BR): Ernest ⏳, Chuka ⏳, Anthony ⏳", "Unit 4 (4 BR): Olumide ⏳, Pikezer Eze ⏳, Dilligaf ⏳, Toyeeb ⏳"], audPp: 350 }
         ],
+        games: [
+          { title: "Dar Coastal Go-Kart Showdown 🏎️", points: "30 Pts (1st) / 22 Pts (2nd)", rules: "Night sprint under floodlights. Wet track simulation if applicable.", venue: "Masaki Karting Track" },
+          { title: "Mbudya Island Beach Olympics 🏖️💪", points: "20 Points Team Champions", rules: "Beach tug-of-war, ocean sprint swim relay, and sand-burpee endurance drill.", venue: "Mbudya Island White Sand Beach" },
+          { title: "Dar Bowling Shootout 🎳", points: "20 Points Winner Take All", rules: "Quick-fire knockout pins competition before the AFCON match party.", venue: "Slipway Entertainment Complex" }
+        ],
         highlights: [
           { title: "Mbudya Island Beach Day 🏝️", category: "Island Trip", desc: "Private boat excursion to Mbudya Island for white sand beach relaxation and fresh seafood BBQs." },
-          { title: "Dar Coastal Go-Kart Showdown 🏎️", category: "Racing", desc: "Round 3: Coastal Go-Karting challenge near Slipway / Masaki." },
-          { title: "AFCON Match Viewing Party ⚽", category: "Sports", desc: "Watching Africa Cup of Nations matches live at a premier sports lounge in Dar es Salaam." }
+          { title: "AFCON Match Viewing Party ⚽", category: "Sports", desc: "Watching Africa Cup of Nations matches live at a premier sports lounge in Dar es Salaam." },
+          { title: "Kivukoni Fish Market & Slipway", category: "Culture", desc: "Exploring local coastal culture, fresh seafood dining, and sunset drinks at The Slipway." }
         ],
         itinerary: [
           { day: "Day 7 (Jul 12)", title: "Arrival & Coastal Check-in", desc: "Arrive at Julius Nyerere Airport. Check-in to apartments. Fresh seafood dinner by the beach." },
-          { day: "Day 8 (Jul 13)", title: "Island Trip & Coastal Go-Karting 🏎️", desc: "Boat trip to Mbudya Island followed by late afternoon Go-Karting showdown." },
-          { day: "Day 9 (Jul 14)", title: "City Tour & AFCON Viewing ⚽", desc: "City market tour followed by AFCON match viewing party at a top lounge." },
+          { day: "Day 8 (Jul 13)", title: "Mbudya Beach Olympics & Coastal Go-Karting 🏖️🏎️", desc: "Island boat trip with Beach Olympics followed by late afternoon Go-Karting showdown." },
+          { day: "Day 9 (Jul 14)", title: "Dar Bowling Shootout & AFCON Viewing 🎳⚽", desc: "Quick-fire bowling shootout followed by AFCON match viewing party at a top lounge." },
           { day: "Day 10 (Jul 15)", title: "Departure to Nairobi", desc: "Morning check-out and flight across the border to Nairobi, Kenya." }
         ]
       },
@@ -274,17 +290,21 @@
         properties: [
           { name: "Pendo Luxury Apartments (20 Private 1-BR Units Booked)", link: "https://www.booking.com/Share-iKgwBd", guests: ["Assigned (12): Adewale 🔒, Akeem ⏳, Sheriff 🔒, Anthony ⏳, Olumide ⏳, Charles 🔒, Nick 🔒, Saheed ⏳, Pikezer Eze ⏳, Chuka ⏳, Ernest ⏳, Toyeeb ⏳", "Unassigned / Surplus (8 Units Open): Niyi ⏳, Fulloption ⏳ (+6 Spare Units Open)"], audPp: 620 }
         ],
+        games: [
+          { title: "Nairobi Go-Kart Grand Final Championship 🏎️🏆", points: "50 Pts (1st) / 35 Pts (2nd) / 25 Pts (3rd)", rules: "20-lap double points finale. Overall tour Go-Kart King crowned based on cumulative points.", venue: "GP Karting Lang'ata" },
+          { title: "Nairobi Ultimate Fitness Decathlon 🏋️‍♂️🔥", points: "30 Points Championship Decider", rules: "Overall tour physical fitness champion decided via weighted dips, pull-ups, and shuttle run.", venue: "Kilimani Fitness Center" },
+          { title: "Operation 4 for 40 Bowling World Cup 🎳👑", points: "40 Points Grand Winner", rules: "Final championship bowling tournament with custom trophy for highest tour total score.", venue: "Sarit Centre Bowling Alley" }
+        ],
         highlights: [
-          { title: "Nairobi Go-Kart Final Championship 🏎️", category: "Racing", desc: "Grand Finale: Final 4-country Go-Kart tournament and crown crowning." },
           { title: "Nairobi National Park Safari 🦁", category: "Wild Life", desc: "Morning game drive safari inside Nairobi National Park with the city skyline in the background." },
           { title: "Giraffe Centre & Carnivore Feast 🦒", category: "Excursion", desc: "Feeding endangered giraffes followed by a medieval meat feast." },
           { title: "Grand 40th Birthday Finale 🎉", category: "Party", desc: "The epic tour closing party in Westlands." }
         ],
         itinerary: [
           { day: "Day 10 (Jul 15)", title: "Arrival & Kilimani Check-In", desc: "Arrive in Nairobi. Check-in at Pendo Luxury Apartments. Welcome drinks at Alchemist." },
-          { day: "Day 11 (Jul 16)", title: "Giraffe Centre & Carnivore Feast 🦒", desc: "Visit Giraffe Centre followed by group feast at Carnivore Restaurant." },
-          { day: "Day 12 (Jul 17)", title: "Safari & Go-Kart Final Championship 🏎️", desc: "Morning safari drive followed by the Nairobi Go-Kart Final Championship." },
-          { day: "Day 13 (Jul 18)", title: "Grand 40th Finale Party 🎉", desc: "Decade Birthday Finale Celebration night out in Westlands." },
+          { day: "Day 11 (Jul 16)", title: "Giraffe Centre, Fitness Decathlon & Carnivore Feast 🏋️‍♂️🍖", desc: "Giraffe Centre visit, morning Fitness Decathlon, and evening Carnivore Feast." },
+          { day: "Day 12 (Jul 17)", title: "Safari & Go-Kart Grand Final Championship 🏎️🏆", desc: "Morning safari drive followed by the 50-point Nairobi Go-Kart Grand Final." },
+          { day: "Day 13 (Jul 18)", title: "Bowling World Cup & Grand 40th Finale Party 🎳🎉", desc: "Final Bowling World Cup tournament in Sarit Centre, followed by Decade Birthday Finale Celebration night out." },
           { day: "Day 14 (Jul 19)", title: "Maasai Market & Wind-Down", desc: "Souvenir shopping at Maasai Market and rooftop lounge winding down." },
           { day: "Day 15 (Jul 20)", title: "Official Tour Conclusion", desc: "Check-out and international flights back home." }
         ]
@@ -305,7 +325,7 @@
 
         const convertedCost = t.costAud > 0 
           ? `${symbol}${(t.costAud * rate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${currentFX}`
-          : (t.rwanda === 'Self-Sorting' ? 'Self-Sorted' : 'Pending Allocation');
+          : (t.rwanda === 'Self-Sorting' ? 'Self-Sorted' : 'Unassigned');
 
         return `
           <tr>
@@ -364,6 +384,19 @@
         `;
       }).join('');
 
+      let gamesHtml = data.games.map(g => `
+        <div class="glass-card p-5 rounded-xl border-l-4 border-indigo-500 space-y-3">
+          <div class="flex justify-between items-start gap-2">
+            <h4 class="font-bold text-white text-base flex items-center gap-2">${g.title}</h4>
+            <span class="text-[10px] font-extrabold text-indigo-400 uppercase bg-indigo-500/10 px-2.5 py-1 rounded-full border border-indigo-500/20 whitespace-nowrap">${g.points}</span>
+          </div>
+          <div class="space-y-1 text-xs text-slate-300">
+            <p><strong class="text-white">Rules & Format:</strong> ${g.rules}</p>
+            <p><strong class="text-white">Location / Venue:</strong> <span class="text-indigo-400">${g.venue}</span></p>
+          </div>
+        </div>
+      `).join('');
+
       let highlightsHtml = data.highlights.map(item => `
         <div class="glass-card p-4 rounded-xl border-l-4 border-amber-400 space-y-1">
           <div class="flex justify-between items-center">
@@ -387,6 +420,8 @@
       let activeContent = '';
       if(activeSub === 'rooms') {
         activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${propertiesHtml}</div>`;
+      } else if(activeSub === 'games') {
+        activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${gamesHtml}</div>`;
       } else if(activeSub === 'highlights') {
         activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${highlightsHtml}</div>`;
       } else if(activeSub === 'itinerary') {
@@ -407,15 +442,18 @@
             </span>
           </div>
 
-          <!-- SUBTABS SELECTOR -->
-          <div class="flex gap-2 border-b border-slate-800 pb-3">
-            <button onclick="switchSubtab('${countryKey}', 'rooms')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSub === 'rooms' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
-              <i class="fa-solid fa-bed mr-1.5"></i> Accommodations & Rooms
+          <!-- SUBTABS SELECTOR (4 DISTINCT SUBTABS) -->
+          <div class="flex gap-2 border-b border-slate-800 pb-3 overflow-x-auto no-scrollbar">
+            <button onclick="switchSubtab('${countryKey}', 'rooms')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'rooms' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
+              <i class="fa-solid fa-bed mr-1.5"></i> 🏨 Accommodations
             </button>
-            <button onclick="switchSubtab('${countryKey}', 'highlights')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSub === 'highlights' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
+            <button onclick="switchSubtab('${countryKey}', 'games')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'games' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
+              <i class="fa-solid fa-trophy mr-1.5 text-amber-400"></i> 🏆 Tournament & Games
+            </button>
+            <button onclick="switchSubtab('${countryKey}', 'highlights')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'highlights' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
               <i class="fa-solid fa-star mr-1.5"></i> 📍 Highlights & Excursions
             </button>
-            <button onclick="switchSubtab('${countryKey}', 'itinerary')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeSub === 'itinerary' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
+            <button onclick="switchSubtab('${countryKey}', 'itinerary')" class="px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'itinerary' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
               <i class="fa-solid fa-calendar-check mr-1.5"></i> 🗓️ Day-by-Day Itinerary
             </button>
           </div>
