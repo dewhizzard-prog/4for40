@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operation 4x4 - Interactive Logistics Dashboard</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            },
+            darkbg: '#0b0f19',
+            darkcard: '#151d2a',
+            darkborder: '#263346'
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #263346;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b4d68;
+    }
+  </style>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen antialiased flex flex-col justify-between">
+
+  <div>
+    <!-- HEADER & NAVIGATION -->
+    <header class="border-b border-darkborder bg-slate-900/90 backdrop-blur sticky top-0 z-50 shadow-lg">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+        
+        <div class="flex items-center space-x-3.5">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg shadow-emerald-500/20">
+            4x4
+          </div>
+          <div>
+            <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+              Operation 4x4 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 uppercase tracking-widest">Live Hub</span>
+            </h1>
+            <p class="text-xs text-slate-400">Multi-Country Tour • Rwanda • Uganda • Tanzania • Kenya</p>
+          </div>
+        </div>
+
+        <!-- Multi-Currency Selector -->
+        <div class="flex items-center space-x-3 bg-slate-800/90 p-1.5 rounded-xl border border-darkborder shadow-inner">
+          <label for="currency-select" class="text-xs font-semibold text-slate-300 pl-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-coins text-amber-400"></i> Currency:
+          </label>
+          <select id="currency-select" onchange="updateCurrency(this.value)" class="bg-slate-900 text-emerald-400 text-sm font-bold rounded-lg px-3 py-1.5 border border-darkborder focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer">
+            <option value="AUD" selected>AUD ($)</option>
+            <option value="USD">USD ($)</option>
+            <option value="CAD">CAD ($)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="CHF">CHF (Fr)</option>
+            <option value="NGN">NGN (₦)</option>
+          </select>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+      <!-- TOP SUMMARY STATS -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Total Guests Card -->
+        <div class="bg-darkcard border border-darkborder rounded-2xl p-5 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition duration-300">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Travelers</p>
+              <h3 class="text-3xl font-extrabold text-white mt-1">14 <span class="text-xs font-medium text-slate-400">Assigned</span></h3>
+              <p class="text-xs text-amber-400/90 mt-1 flex items-center gap-1 font-medium">
+                <i class="fa-solid fa-user-clock"></i> 1 Undecided (Fulloption)
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl border border-blue-500/20">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Excluded: Bolaji, Dayo, toibGUY</span>
+            <span class="text-emerald-400 font-semibold">15 Total Roster</span>
+          </div>
+        </div>
+
+        <!-- Total Destinations -->
+        <div class="bg-darkcard border border-darkborder rounded-2xl p-5 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition duration-300">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Destinations</p>
+              <h3 class="text-3xl font-extrabold text-white mt-1">4 <span class="text-xs font-medium text-slate-400">Countries</span></h3>
+              <p class="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+                <i class="fa-solid fa-calendar-days"></i> Jul 06 – Jul 20 (14 Nights)
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl border border-purple-500/20">
+              <i class="fa-solid fa-earth-africa"></i>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Rwanda • Uganda • Tanzania • Kenya</span>
+          </div>
+        </div>
+
+        <!-- Total Capacity Status -->
+        <div class="bg-darkcard border border-darkborder rounded-2xl p-5 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition duration-300">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Bed Capacity</p>
+              <h3 class="text-3xl font-extrabold text-white mt-1">51 <span class="text-xs font-medium text-slate-400">Rooms</span></h3>
+              <p class="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+                <i class="fa-solid fa-bed"></i> 41 Assigned | 10 Surplus
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl border border-emerald-500/20">
+              <i class="fa-solid fa-hotel"></i>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Overall Capacity:</span>
+            <span class="text-emerald-400 font-semibold">Surplus in Rwanda & Kenya</span>
+          </div>
+        </div>
+
+        <!-- Unassigned Gap Alert -->
+        <div class="bg-darkcard border border-darkborder rounded-2xl p-5 shadow-xl relative overflow-hidden group hover:border-emerald-500/50 transition duration-300">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Booking Action Gaps</p>
+              <h3 class="text-3xl font-extrabold text-amber-400 mt-1">2 <span class="text-xs font-medium text-slate-400">Units Needed</span></h3>
+              <p class="text-xs text-amber-300 mt-1 flex items-center gap-1 font-medium">
+                <i class="fa-solid fa-circle-exclamation"></i> Uganda & Tanzania Need Units
+              </p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl border border-amber-500/20">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between">
+            <span>Pending Guests:</span>
+            <span class="text-amber-400 font-semibold">Toyeeb, Niyi, Fulloption</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- INTERACTIVE COUNTRY TABS & ROOM ASSIGNMENTS -->
+      <section class="bg-darkcard border border-darkborder rounded-2xl shadow-2xl overflow-hidden">
+        <div class="border-b border-darkborder bg-slate-900/60 p-4 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-map-location-dot text-emerald-400"></i> Country Room Assignments & Capacity
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Explore accommodation units, property links, room layouts, and guest assignments per leg.</p>
+          </div>
+
+          <!-- Country Tabs Buttons -->
+          <div class="flex flex-wrap gap-2 bg-slate-900 p-1.5 rounded-xl border border-darkborder" id="country-tabs">
+            <button onclick="switchTab('rwanda')" id="tab-rwanda" class="px-4 py-2 rounded-lg text-xs font-extrabold transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow-md">
+              🇷🇼 Rwanda
+            </button>
+            <button onclick="switchTab('uganda')" id="tab-uganda" class="px-4 py-2 rounded-lg text-xs font-extrabold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+              🇺🇬 Uganda
+            </button>
+            <button onclick="switchTab('tanzania')" id="tab-tanzania" class="px-4 py-2 rounded-lg text-xs font-extrabold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+              🇹🇿 Tanzania
+            </button>
+            <button onclick="switchTab('kenya')" id="tab-kenya" class="px-4 py-2 rounded-lg text-xs font-extrabold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+              🇰🇪 Kenya
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- RWANDA CONTENT -->
+          <div id="content-rwanda" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Dates & Location</p>
+                <p class="text-sm font-bold text-white mt-1">Jul 06 – Jul 09 (3 Nights)</p>
+                <p class="text-xs text-emerald-400 mt-0.5 font-medium">Kigali, Rwanda</p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Capacity Analysis</p>
+                <p class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-2">
+                  10 Rooms Available vs 8 Assigned <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold border border-blue-500/30">Surplus (+2)</span>
+                </p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Pending Unassigned</p>
+                <p class="text-sm font-bold text-amber-400 mt-1">Fulloption (Undecided)</p>
+                <p class="text-xs text-slate-400 mt-0.5">Fits into 1 of 2 spare rooms in 4-BR unit</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Villa 1 -->
+              <div class="bg-slate-900/90 border border-darkborder rounded-2xl p-5 relative flex flex-col justify-between hover:border-emerald-500/40 transition shadow-lg">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">3-Bedroom Villa</span>
+                    <a href="https://www.airbnb.com.au/rooms/1611457630423220239" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold">
+                      Airbnb <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                  </div>
+                  <h4 class="font-bold text-white text-base mb-1">Avaia Private Residence</h4>
+                  <p class="text-xs text-slate-400 mb-4">10 mins away from Kigali city centre</p>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 1</span>
+                      <span class="text-white font-bold">Adewale</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 2</span>
+                      <span class="text-white font-bold">Sheriff</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 3</span>
+                      <span class="text-white font-bold">Akeem</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Cost / Person:</span>
+                  <span class="font-extrabold text-emerald-400 text-sm currency-val" data-aud="400">$400 AUD</span>
+                </div>
+              </div>
+
+              <!-- Combined Block -->
+              <div class="bg-slate-900/90 border border-darkborder rounded-2xl p-5 relative flex flex-col justify-between hover:border-emerald-500/40 transition shadow-lg">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">3-Bedroom Block</span>
+                    <a href="https://www.airbnb.com.au/rooms/1742683478719031917" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold">
+                      Airbnb <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                  </div>
+                  <h4 class="font-bold text-white text-base mb-1">Kigali Combined Block</h4>
+                  <p class="text-xs text-slate-400 mb-4">2-Bed + 1-Bed in same building</p>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 1</span>
+                      <span class="text-white font-bold">Nick</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 2</span>
+                      <span class="text-white font-bold">Anthony</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 3</span>
+                      <span class="text-white font-bold">Charles</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Cost / Person:</span>
+                  <span class="font-extrabold text-emerald-400 text-sm currency-val" data-aud="316.67">$316.67 AUD</span>
+                </div>
+              </div>
+
+              <!-- 4-BR Unit -->
+              <div class="bg-slate-900/90 border border-darkborder rounded-2xl p-5 relative flex flex-col justify-between hover:border-emerald-500/40 transition shadow-lg">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">4-Bedroom Unit</span>
+                    <span class="text-xs text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Booked</span>
+                  </div>
+                  <h4 class="font-bold text-white text-base mb-1">Kigali 4-BR Residence</h4>
+                  <p class="text-xs text-slate-400 mb-4">Newly added for expanded roster</p>
+                  <div class="space-y-2">
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 1</span>
+                      <span class="text-white font-bold">Dilligaf</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50">
+                      <span class="text-slate-300 font-medium"><i class="fa-solid fa-bed text-emerald-400 mr-2"></i> Room 2</span>
+                      <span class="text-white font-bold">Toyeeb</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-amber-500/30 text-amber-300">
+                      <span class="font-medium"><i class="fa-solid fa-bed text-amber-400 mr-2"></i> Room 3</span>
+                      <span class="font-bold italic">Open (Fulloption)</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/50 text-slate-400">
+                      <span class="font-medium"><i class="fa-solid fa-bed mr-2"></i> Room 4</span>
+                      <span class="italic">Open Surplus Room</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-xs">
+                  <span class="text-slate-400">Status:</span>
+                  <span class="font-semibold text-slate-300">Included in Group Booking</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- UGANDA CONTENT -->
+          <div id="content-uganda" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Dates & Location</p>
+                <p class="text-sm font-bold text-white mt-1">Jul 09 – Jul 12 (3 Nights)</p>
+                <p class="text-xs text-emerald-400 mt-0.5 font-medium">Kampala, Uganda</p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Capacity Analysis</p>
+                <p class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-2">
+                  8 Rooms Booked vs 8 Assigned <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Balanced (0)</span>
+                </p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Pending Unassigned</p>
+                <p class="text-sm font-bold text-amber-400 mt-1">Toyeeb & Fulloption</p>
+                <p class="text-xs text-slate-400 mt-0.5">Requires 1 additional 2-bedroom unit</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-darkborder rounded-2xl p-5 shadow-lg">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                <div>
+                  <h4 class="font-bold text-white text-base">Kololo 2-Bedroom Apartment Block</h4>
+                  <p class="text-xs text-slate-400">4 Units Booked = 8 Total Bedrooms | 470 AUD total per unit (235 AUD per person)</p>
+                </div>
+                <a href="https://www.airbnb.com.au/rooms/992772718929728730" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold self-start md:self-auto">
+                  Airbnb Listing <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 1 (2 Bedrooms)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Adewale</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Akeem</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                  </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 2 (2 Bedrooms)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Sheriff</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Nick</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                  </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 3 (2 Bedrooms)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Charles</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Anthony</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                  </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 4 (2 Bedrooms)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Olumide</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                    <div class="p-2.5 bg-slate-900 rounded-lg font-bold text-slate-100 flex items-center justify-between"><span>Dilligaf</span><i class="fa-solid fa-bed text-emerald-400 text-[10px]"></i></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TANZANIA CONTENT -->
+          <div id="content-tanzania" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Dates & Location</p>
+                <p class="text-sm font-bold text-white mt-1">Jul 12 – Jul 15 (3 Nights)</p>
+                <p class="text-xs text-emerald-400 mt-0.5 font-medium">Dar es Salaam, Tanzania</p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Capacity Analysis</p>
+                <p class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-2">
+                  13 Rooms Available vs 13 Assigned <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">Balanced (0)</span>
+                </p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Pending Unassigned</p>
+                <p class="text-sm font-bold text-amber-400 mt-1">Niyi & Fulloption</p>
+                <p class="text-xs text-slate-400 mt-0.5">Requires 1 additional 3-Bed or 4-Bed unit</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-darkborder rounded-2xl p-5 shadow-lg">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                <div>
+                  <h4 class="font-bold text-white text-base">Dar es Salaam Apartments</h4>
+                  <p class="text-xs text-slate-400">Booked under <span class="text-emerald-400 font-bold">dewhizzard</span> Airbnb account | 3 × 3-BR + 1 × 4-BR = 13 Rooms</p>
+                </div>
+                <a href="https://www.airbnb.com.au/rooms/1174483643076432401" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold self-start md:self-auto">
+                  Airbnb Listing <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 1 (3 Bedrooms)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Adewale</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Akeem</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Sheriff</div>
+                  </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 2 (3 Bedrooms - Custom)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Saheed</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Nick</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Charles</div>
+                  </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-emerald-400 mb-2">Unit 3 (3 Bedrooms - Custom)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Ernest</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Chuka</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Anthony</div>
+                  </div>
+                </div>
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-4">
+                  <p class="text-xs font-bold text-purple-400 mb-2">Unit 4 (4 Bedrooms - Upgraded)</p>
+                  <div class="space-y-1.5 text-xs">
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Olumide</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Pikezer Eze</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-slate-200">Dilligaf</div>
+                    <div class="p-2 bg-slate-900 rounded-lg font-bold text-emerald-300 border border-emerald-500/30">Toyeeb</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KENYA CONTENT -->
+          <div id="content-kenya" class="tab-content hidden space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Dates & Location</p>
+                <p class="text-sm font-bold text-white mt-1">Jul 15 – Jul 20 (5 Nights)</p>
+                <p class="text-xs text-emerald-400 mt-0.5 font-medium">Nairobi, Kenya</p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Capacity Analysis</p>
+                <p class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-2">
+                  20 Apartments vs 12 Assigned <span class="text-xs px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold border border-blue-500/30">Surplus (+8)</span>
+                </p>
+              </div>
+              <div class="bg-slate-900/80 border border-darkborder rounded-xl p-4">
+                <p class="text-[11px] text-slate-400 font-bold uppercase">Pending Unassigned</p>
+                <p class="text-sm font-bold text-emerald-400 mt-1">None (Fully Covered)</p>
+                <p class="text-xs text-slate-400 mt-0.5">Niyi & Fulloption fit into remaining 8 surplus units</p>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/90 border border-darkborder rounded-2xl p-5 shadow-lg">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-800">
+                <div>
+                  <h4 class="font-bold text-white text-base">Pendo Luxury Apartments</h4>
+                  <p class="text-xs text-slate-400">20 Private 1-Bedroom Apartments Booked | 620 AUD per person</p>
+                </div>
+                <a href="https://www.booking.com/Share-iKgwBd" target="_blank" class="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold self-start md:self-auto">
+                  Booking.com Listing <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 01</span>
+                  <span class="font-bold text-white">Adewale</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 02</span>
+                  <span class="font-bold text-white">Akeem</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 03</span>
+                  <span class="font-bold text-white">Sheriff</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 04</span>
+                  <span class="font-bold text-white">Anthony</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 05</span>
+                  <span class="font-bold text-white">Olumide</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 06</span>
+                  <span class="font-bold text-white">Charles</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 07</span>
+                  <span class="font-bold text-white">Nick</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 08</span>
+                  <span class="font-bold text-white">Saheed</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 09</span>
+                  <span class="font-bold text-white">Pikezer Eze</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 10</span>
+                  <span class="font-bold text-white">Chuka</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 11</span>
+                  <span class="font-bold text-white">Ernest</span>
+                </div>
+                <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700/50 text-xs">
+                  <span class="text-slate-400 block text-[10px] font-bold">Unit 12</span>
+                  <span class="font-bold text-white">Toyeeb</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MASTER GUEST ROSTER & COST MATRIX -->
+      <section class="bg-darkcard border border-darkborder rounded-2xl shadow-2xl overflow-hidden">
+        <div class="p-6 border-b border-darkborder flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-calculator text-emerald-400"></i> Master Guest Cost Matrix
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Calculated multi-currency totals per traveler based on confirmed leg bookings.</p>
+          </div>
+
+          <!-- Search Input -->
+          <div class="relative w-full md:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="roster-search" onkeyup="filterRoster()" placeholder="Search guest name..." class="w-full bg-slate-900 text-xs text-white pl-9 pr-4 py-2 rounded-xl border border-darkborder focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-900/80 text-slate-400 uppercase text-[10px] font-extrabold tracking-wider border-b border-darkborder">
+              <tr>
+                <th class="py-4 px-6">Guest Name</th>
+                <th class="py-4 px-6">Attending Legs</th>
+                <th class="py-4 px-6">Rwanda</th>
+                <th class="py-4 px-6">Uganda</th>
+                <th class="py-4 px-6">Tanzania</th>
+                <th class="py-4 px-6">Kenya</th>
+                <th class="py-4 px-6 text-right">Total Accommodation Cost</th>
+              </tr>
+            </thead>
+            <tbody id="roster-tbody" class="divide-y divide-slate-800/80 font-medium">
+              <!-- Dynamically populated via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- GAP & ACTION CHECKLIST -->
+      <section class="bg-darkcard border border-darkborder rounded-2xl p-6 shadow-2xl space-y-4">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-amber-400"></i> Unassigned Guest Action Checklist
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Status required to transition Toyeeb, Niyi, and Fulloption into fully assigned accommodations.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+          <div class="bg-slate-900/80 border border-emerald-500/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-400">🇷🇼 Rwanda</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">COVERED</span>
+            </div>
+            <p class="text-xs text-slate-300">0 extra units needed. Fulloption fits into spare room in 4-BR unit.</p>
+          </div>
+
+          <div class="bg-slate-900/80 border border-amber-500/40 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">🇺🇬 Uganda</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">ACTION NEEDED</span>
+            </div>
+            <p class="text-xs text-slate-300">Book **1 extra 2-BR unit** (~470 AUD) to cover Toyeeb & Fulloption.</p>
+          </div>
+
+          <div class="bg-slate-900/80 border border-amber-500/40 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-amber-400">🇹🇿 Tanzania</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">ACTION NEEDED</span>
+            </div>
+            <p class="text-xs text-slate-300">Book **1 extra 3-BR or 4-BR unit** to cover Niyi & Fulloption.</p>
+          </div>
+
+          <div class="bg-slate-900/80 border border-emerald-500/30 rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-emerald-400">🇰🇪 Kenya</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">COVERED</span>
+            </div>
+            <p class="text-xs text-slate-300">0 extra units needed. 8 surplus apartments open for Niyi & Fulloption.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-darkborder bg-slate-950 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+      Operation 4x4 Multi-Country Tour Logistics Dashboard • Fully Interactive Accommodation Roster
+    </div>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // Currency rates relative to AUD 1.00
+    const rates = {
+      AUD: { symbol: '$', rate: 1.00 },
+      USD: { symbol: '$', rate: 0.6942 },
+      CAD: { symbol: '$', rate: 0.9862 },
+      GBP: { symbol: '£', rate: 0.5238 },
+      CHF: { symbol: 'Fr ', rate: 0.5762 },
+      NGN: { symbol: '₦', rate: 926.18 }
+    };
+
+    let currentCurrency = 'AUD';
+
+    // Roster Dataset
+    const guestsData = [
+      { name: 'Adewale', rwanda: 400, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Akeem', rwanda: 400, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Sheriff', rwanda: 400, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Nick', rwanda: 316.67, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Anthony', rwanda: 316.67, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Charles', rwanda: 316.67, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Olumide', rwanda: 0, uganda: 235, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Saheed', rwanda: 0, uganda: 0, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Pikezer Eze', rwanda: 0, uganda: 0, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Chuka', rwanda: 0, uganda: 0, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Ernest', rwanda: 0, uganda: 0, tanzania: 350, kenya: 620, status: 'Confirmed' },
+      { name: 'Dilligaf', rwanda: 0, uganda: 235, tanzania: 350, kenya: 0, status: 'Confirmed' },
+      { name: 'Toyeeb', rwanda: 0, uganda: 0, tanzania: 350, kenya: 620, status: 'Partial' },
+      { name: 'Niyi', rwanda: 0, uganda: 0, tanzania: 0, kenya: 620, status: 'Partial' },
+      { name: 'Fulloption', rwanda: 0, uganda: 0, tanzania: 0, kenya: 0, status: 'Undecided' }
+    ];
+
+    function formatVal(audVal) {
+      if (audVal === 0) return '-';
+      const converted = audVal * rates[currentCurrency].rate;
+      if (currentCurrency === 'NGN') {
+        return rates[currentCurrency].symbol + Math.round(converted).toLocaleString();
+      }
+      return rates[currentCurrency].symbol + converted.toFixed(2);
+    }
+
+    function renderRoster() {
+      const tbody = document.getElementById('roster-tbody');
+      tbody.innerHTML = '';
+
+      guestsData.forEach(guest => {
+        const totalAud = guest.rwanda + guest.uganda + guest.tanzania + guest.kenya;
+        const legs = [];
+        if (guest.rwanda > 0) legs.push('Rwanda');
+        if (guest.uganda > 0) legs.push('Uganda');
+        if (guest.tanzania > 0) legs.push('Tanzania');
+        if (guest.kenya > 0) legs.push('Kenya');
+
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-800/50 transition';
+        row.innerHTML = `
+          <td class="py-3.5 px-6 font-bold text-white flex items-center gap-2">
+            ${guest.name}
+            ${guest.status === 'Undecided' ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Undecided</span>' : ''}
+          </td>
+          <td class="py-3.5 px-6 text-slate-400 text-[11px]">
+            ${legs.length > 0 ? legs.join(', ') : '<span class="italic text-slate-500">Unassigned</span>'}
+          </td>
+          <td class="py-3.5 px-6">${formatVal(guest.rwanda)}</td>
+          <td class="py-3.5 px-6">${formatVal(guest.uganda)}</td>
+          <td class="py-3.5 px-6">${formatVal(guest.tanzania)}</td>
+          <td class="py-3.5 px-6">${formatVal(guest.kenya)}</td>
+          <td class="py-3.5 px-6 text-right font-black text-emerald-400 text-sm">
+            ${formatVal(totalAud)}
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      updateStaticCurrencyLabels();
+    }
+
+    function updateStaticCurrencyLabels() {
+      document.querySelectorAll('.currency-val').forEach(el => {
+        const audVal = parseFloat(el.getAttribute('data-aud'));
+        if (!isNaN(audVal)) {
+          el.innerText = formatVal(audVal);
+        }
+      });
+    }
+
+    function updateCurrency(val) {
+      currentCurrency = val;
+      renderRoster();
+    }
+
+    function switchTab(country) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`content-${country}`).classList.remove('hidden');
+
+      const tabs = ['rwanda', 'uganda', 'tanzania', 'kenya'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (t === country) {
+          btn.className = 'px-4 py-2 rounded-lg text-xs font-extrabold transition flex items-center gap-2 bg-emerald-500 text-slate-950 shadow-md';
+        } else {
+          btn.className = 'px-4 py-2 rounded-lg text-xs font-extrabold transition flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800';
+        }
+      });
+    }
+
+    function filterRoster() {
+      const q = document.getElementById('roster-search').value.toLowerCase();
+      const rows = document.querySelectorAll('#roster-tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    window.onload = function() {
+      renderRoster();
+    };
+  </script>
+</body>
+</html>
