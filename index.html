@@ -42,14 +42,14 @@
           <i class="fa-solid fa-plane-departure text-amber-400"></i> Launch:
         </span>
         <div class="flex items-center gap-1 text-center font-mono font-extrabold text-xs">
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-months">00</div>
+          <span class="text-slate-500 text-[10px]">m</span>
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-weeks">00</div>
+          <span class="text-slate-500 text-[10px]">w</span>
           <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-days">00</div>
           <span class="text-slate-500 text-[10px]">d</span>
-          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-hours">00</div>
-          <span class="text-slate-500 text-[10px]">h</span>
-          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-mins">00</div>
-          <span class="text-slate-500 text-[10px]">m</span>
-          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-amber-400" id="cd-secs">00</div>
-          <span class="text-amber-400/80 text-[10px]">s</span>
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-amber-400" id="cd-hours">00</div>
+          <span class="text-amber-400/80 text-[10px]">h</span>
         </div>
       </div>
 
@@ -222,31 +222,48 @@
   </div>
 
   <script>
-    // COUNTDOWN TIMER LOGIC
-    const departureDate = new Date('July 6, 2027 00:00:00').getTime();
+    // COUNTDOWN TIMER LOGIC (Months, Weeks, Days, Hours)
+    const departureDate = new Date('July 6, 2027 00:00:00');
 
     function updateCountdown() {
-      const now = new Date().getTime();
-      const distance = departureDate - now;
+      const now = new Date();
+      if (now < departureDate) {
+        let tempDate = new Date(now.getTime());
 
-      if (distance > 0) {
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Calculate full months remaining
+        let months = 0;
+        while (true) {
+          let nextMonth = new Date(tempDate.getTime());
+          nextMonth.setMonth(nextMonth.getMonth() + 1);
+          if (nextMonth <= departureDate) {
+            months++;
+            tempDate = nextMonth;
+          } else {
+            break;
+          }
+        }
 
+        // Remaining time after subtracting full months
+        const remainingMs = departureDate.getTime() - tempDate.getTime();
+        const totalHours = Math.floor(remainingMs / (1000 * 60 * 60));
+        const daysTotal = Math.floor(totalHours / 24);
+        
+        const weeks = Math.floor(daysTotal / 7);
+        const days = daysTotal % 7;
+        const hours = totalHours % 24;
+
+        document.getElementById('cd-months').innerText = String(months).padStart(2, '0');
+        document.getElementById('cd-weeks').innerText = String(weeks).padStart(2, '0');
         document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
         document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
-        document.getElementById('cd-mins').innerText = String(minutes).padStart(2, '0');
-        document.getElementById('cd-secs').innerText = String(seconds).padStart(2, '0');
       } else {
+        document.getElementById('cd-months').innerText = '00';
+        document.getElementById('cd-weeks').innerText = '00';
         document.getElementById('cd-days').innerText = '00';
         document.getElementById('cd-hours').innerText = '00';
-        document.getElementById('cd-mins').innerText = '00';
-        document.getElementById('cd-secs').innerText = '00';
       }
     }
-    setInterval(updateCountdown, 1000);
+    setInterval(updateCountdown, 1000 * 60); // Update every minute
     updateCountdown();
 
     // CURRENCY CONVERSION RATES (Base: AUD)
