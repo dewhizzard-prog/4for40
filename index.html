@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,31 +13,52 @@
     .glass-card-hover:hover { border-color: rgba(59, 130, 246, 0.4); transform: translateY(-2px); transition: all 0.2s ease; }
     .tab-active { border-bottom: 3px solid #3b82f6; color: #3b82f6; font-weight: 700; }
     .subtab-active { background-color: #3b82f6; color: #ffffff; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="min-h-screen pb-12">
 
-  <!-- HEADER -->
+  <!-- HEADER WITH INTEGRATED COMPACT COUNTDOWN TIMER -->
   <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-40 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-blue-500/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap lg:flex-nowrap justify-between items-center gap-4">
+      
+      <!-- LOGO & TITLE -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-amber-500 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-blue-500/20">
           40
         </div>
         <div>
-          <h1 class="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
-            ManLikeWales@40 <span class="bg-blue-500/10 text-blue-400 text-xs px-2.5 py-0.5 rounded-full border border-blue-500/20 font-semibold">Operation 4 for 40</span>
+          <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-2">
+            ManLikeWales@40 <span class="bg-blue-500/10 text-blue-400 text-[10px] px-2 py-0.5 rounded-full border border-blue-500/20 font-semibold">Operation 4 for 40</span>
           </h1>
-          <p class="text-xs text-slate-400">4 Countries • July 06 – July 20, 2027 • Live Logistics Tracker</p>
+          <p class="text-[11px] text-slate-400">4 Countries • July 06 – July 20, 2027 • Live Logistics Tracker</p>
+        </div>
+      </div>
+
+      <!-- COMPACT HEADER COUNTDOWN TIMER (ALIGNED IN BETWEEN) -->
+      <div class="flex items-center bg-slate-800/80 border border-blue-500/30 rounded-xl px-3 py-1.5 gap-2.5 shadow-inner my-1 sm:my-0">
+        <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider hidden sm:flex items-center gap-1.5 whitespace-nowrap">
+          <i class="fa-solid fa-plane-departure text-amber-400"></i> Launch:
+        </span>
+        <div class="flex items-center gap-1 text-center font-mono font-extrabold text-xs">
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-days">00</div>
+          <span class="text-slate-500 text-[10px]">d</span>
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-hours">00</div>
+          <span class="text-slate-500 text-[10px]">h</span>
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-white" id="cd-mins">00</div>
+          <span class="text-slate-500 text-[10px]">m</span>
+          <div class="bg-slate-900 border border-slate-700 rounded px-1.5 py-0.5 min-w-[28px] text-amber-400" id="cd-secs">00</div>
+          <span class="text-amber-400/80 text-[10px]">s</span>
         </div>
       </div>
 
       <!-- CURRENCY TOGGLE -->
-      <div class="flex items-center bg-slate-800/90 rounded-xl p-1.5 border border-slate-700/60 shadow-inner">
-        <span class="text-xs font-semibold text-slate-400 px-3 flex items-center gap-1.5">
-          <i class="fa-solid fa-coins text-amber-400"></i> Currency:
+      <div class="flex items-center bg-slate-800/90 rounded-xl p-1.5 border border-slate-700/60 shadow-inner shrink-0">
+        <span class="text-xs font-semibold text-slate-400 px-2 sm:px-3 flex items-center gap-1.5">
+          <i class="fa-solid fa-coins text-amber-400"></i> <span class="hidden sm:inline">Currency:</span>
         </span>
-        <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-slate-900 text-blue-400 font-bold text-sm rounded-lg px-3 py-1.5 border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
+        <select id="currencySelector" onchange="changeCurrency(this.value)" class="bg-slate-900 text-blue-400 font-bold text-xs sm:text-sm rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:border-blue-500 cursor-pointer">
           <option value="AUD">AUD ($)</option>
           <option value="USD">USD ($)</option>
           <option value="CAD">CAD ($)</option>
@@ -46,43 +67,12 @@
           <option value="NGN">NGN (₦)</option>
         </select>
       </div>
+
     </div>
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
-
-    <!-- COUNTDOWN TIMER BANNER -->
-    <div class="glass-card p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950/40 to-slate-900 border border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-      <div class="space-y-1 text-center md:text-left">
-        <span class="text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center justify-center md:justify-start gap-2">
-          <i class="fa-solid fa-plane-departure text-amber-400"></i> Countdown to Departure
-        </span>
-        <h2 class="text-2xl font-black text-white">Jul 06, 2027 • Kigali Launch 🚀</h2>
-      </div>
-
-      <div class="flex items-center gap-3 text-center">
-        <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 min-w-[70px]">
-          <span id="cd-days" class="block text-2xl font-black text-white">00</span>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Days</span>
-        </div>
-        <span class="text-xl font-bold text-slate-600">:</span>
-        <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 min-w-[70px]">
-          <span id="cd-hours" class="block text-2xl font-black text-white">00</span>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Hours</span>
-        </div>
-        <span class="text-xl font-bold text-slate-600">:</span>
-        <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 min-w-[70px]">
-          <span id="cd-mins" class="block text-2xl font-black text-white">00</span>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Mins</span>
-        </div>
-        <span class="text-xl font-bold text-slate-600">:</span>
-        <div class="bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-2.5 min-w-[70px]">
-          <span id="cd-secs" class="block text-2xl font-black text-amber-400">00</span>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Secs</span>
-        </div>
-      </div>
-    </div>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
 
     <!-- TOP METRICS GRID -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -114,7 +104,7 @@
 
       <div class="glass-card p-5 rounded-2xl">
         <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Units Booked</div>
-        <div class="text-3xl font-black text-emerald-400">27 Units</div>
+        <div class="text-3xl font-black text-emerald-400">28 Units</div>
         <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
           <i class="fa-solid fa-building text-emerald-400"></i> Across Kigali, Kampala, DSM, Nairobi
         </p>
@@ -289,16 +279,16 @@
     const countryData = {
       rwanda: {
         flag: "🇷🇼", name: "Rwanda (Kigali)", dates: "Jul 06 – Jul 09 (3 Nights)",
-        statusTag: "Capacity Surplus (+2 BR Open)", statusClass: "bg-blue-500/20 text-blue-400",
+        statusTag: "Fully Booked (10 BR Confirmed)", statusClass: "bg-emerald-500/20 text-emerald-400",
         properties: [
           { name: "Avaia - Private 3 BR Residence", link: "https://www.airbnb.com.au/rooms/1611457630423220239", guests: ["Adewale 🔒", "Sheriff 🔒", "Akeem ⏳"], audPp: 400 },
           { name: "Kigali Combined Block (3 BR)", link: "https://www.airbnb.com.au/rooms/1742683478719031917", guests: ["Nick ⏳", "Anthony ⏳", "Charles ⏳"], audPp: 316.67 },
-          { name: "4-Bedroom Unit (New Addition)", link: "https://www.airbnb.com.au/rooms/1446485293192029182?source_impression_id=p3_1792496178_P3b0dQHSuSKtEUe_", guests: ["Dilligaf ⏳", "Toyeeb ⏳", "Open Bedroom", "Open Bedroom"], audPp: 0 }
+          { name: "4-Bedroom Unit (Confirmed by Host)", link: "https://www.airbnb.com.au/rooms/1446485293192029182?source_impression_id=p3_1792496178_P3b0dQHSuSKtEUe_", guests: ["Dilligaf ⏳", "Toyeeb ⏳", "Spare Room 1", "Spare Room 2"], audPp: 280 }
         ],
         games: [
           { title: "Kigali Go-Kart Time Trial 🏎️", category: "Go-Karting", points: "25 Pts", desc: "Round 1 qualifier time trials at Kigali Karting track." },
           { title: "Summit Push-Up & Plank Challenge 🏋️‍♂️", category: "Fitness", points: "15 Pts", desc: "Bodyweight endurance contest at Fazenda Sengha lookout." },
-          { title: "Kigali Strike-Out Cup 🎳", category: "Bowling", points: "20 Pts", desc: "Late-night group bowling tournament in Kigali." }
+          { title: "Kigali Strike-Out Cup Bowling 🎳", category: "Bowling", points: "20 Pts", desc: "Late-night group bowling tournament in Kigali." }
         ],
         highlights: [
           { title: "Kigali Genocide Memorial & Inema Arts", category: "Culture & History", desc: "A moving tribute to Rwanda's history followed by a tour of Kigali's top contemporary art gallery." },
@@ -343,7 +333,7 @@
         games: [
           { title: "Dar Coastal Go-Kart Showdown 🏎️", category: "Go-Karting", points: "30 Pts", desc: "Round 3 coastal track showdown near Slipway." },
           { title: "Mbudya Beach Olympics 🏝️", category: "Fitness", points: "25 Pts", desc: "Beach tug-of-war, sprint relay, and swimming race." },
-          { title: "Masaki Strike League 🎳", category: "Bowling", points: "20 Pts", desc: "Late afternoon bowling lounge tournament in Masaki." }
+          { title: "Masaki Strike League Bowling 🎳", category: "Bowling", points: "20 Pts", desc: "Late afternoon bowling lounge tournament in Masaki." }
         ],
         highlights: [
           { title: "Mbudya Island Beach Day 🏝️", category: "Island Trip", desc: "Private boat excursion to Mbudya Island for white sand beach relaxation and fresh seafood BBQs." },
@@ -429,7 +419,7 @@
         // 1. Guest Search Match
         const matchesGuest = guestName.includes(guestQ);
 
-        // 2. Accommodation Search Match (Across all country columns)
+        // 2. Accommodation Search Match
         const matchesAccom = accomQ === '' || 
           rwanda.includes(accomQ) || 
           uganda.includes(accomQ) || 
