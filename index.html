@@ -131,7 +131,7 @@
 
       <div class="glass-card p-3.5 sm:p-5 rounded-2xl">
         <div class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 sm:mb-2">Total Units Booked</div>
-        <div class="text-xl sm:text-3xl font-black text-emerald-400">28 Units</div>
+        <div class="text-xl sm:text-3xl font-black text-emerald-400">29 Units</div>
         <p class="text-[10px] sm:text-xs text-slate-400 mt-1 flex items-center gap-1">
           <i class="fa-solid fa-building text-emerald-400 text-[10px]"></i> 4-Country Properties
         </p>
@@ -139,9 +139,9 @@
 
       <div class="glass-card p-3.5 sm:p-5 rounded-2xl">
         <div class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 sm:mb-2">Capacity Gaps</div>
-        <div class="text-xl sm:text-3xl font-black text-amber-400">2 Units Needed</div>
+        <div class="text-xl sm:text-3xl font-black text-emerald-400">0 Gaps</div>
         <p class="text-[10px] sm:text-xs text-slate-400 mt-1 flex items-center gap-1">
-          <i class="fa-solid fa-triangle-exclamation text-amber-400 text-[10px]"></i> Uganda & Tanzania
+          <i class="fa-solid fa-circle-check text-emerald-400 text-[10px]"></i> All 4 Legs Covered
         </p>
       </div>
     </div>
@@ -167,7 +167,7 @@
       <!-- Dynamic JS Content Injected Here -->
     </div>
 
-    <!-- RESTRUCTURED MOBILE-FRIENDLY GUEST ALLOCATION & COST SUMMARY -->
+    <!-- MASTER GUEST ACCOMMODATION MATRIX & SUMMARY -->
     <section class="glass-card p-4 sm:p-6 rounded-2xl space-y-4">
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4">
         <div class="flex justify-between items-center w-full lg:w-auto">
@@ -309,7 +309,7 @@
       { name: "Sheriff", ticket: "locked", legs: "All 4 Countries", rwanda: "Avaia Villa (BR 2)", uganda: "Kololo Unit 2", tanzania: "DSM Unit 1", kenya: "Pendo Unit 3", costAud: 1605 },
       { name: "Dayo", ticket: "locked", legs: "All 4 Countries", rwanda: "Self-Sorting", uganda: "Self-Sorting", tanzania: "Self-Sorting", kenya: "Self-Sorting", costAud: 0 },
       { name: "Bolaji", ticket: "locked", legs: "All 4 Countries", rwanda: "Self-Sorting", uganda: "Self-Sorting", tanzania: "Self-Sorting", kenya: "Self-Sorting", costAud: 0 },
-      { name: "Akeem", ticket: "pending", legs: "All 4 Countries", rwanda: "Avaia Villa (BR 3)", uganda: "Kololo Unit 1", tanzania: "DSM Unit 1", kenya: "Pendo Unit 2", costAud: 1605 },
+      { name: "Akeem", ticket: "pending", legs: "All 4 Countries", rwanda: "Avaia Villa (BR 3)", uganda: "Kololo Unit 1 (Host)", tanzania: "DSM Unit 1", kenya: "Pendo Unit 2", costAud: 1605 },
       { name: "Nick", ticket: "pending", legs: "All 4 Countries", rwanda: "Kigali Block (BR 1)", uganda: "Kololo Unit 2", tanzania: "DSM Unit 2", kenya: "Pendo Unit 7", costAud: 1521.67 },
       { name: "Anthony", ticket: "pending", legs: "All 4 Countries", rwanda: "Kigali Block (BR 2)", uganda: "Kololo Unit 3", tanzania: "DSM Unit 3", kenya: "Pendo Unit 4", costAud: 1521.67 },
       { name: "Charles", ticket: "pending", legs: "All 4 Countries", rwanda: "Kigali Block (BR 3)", uganda: "Kololo Unit 3", tanzania: "DSM Unit 2", kenya: "Pendo Unit 6", costAud: 1521.67 },
@@ -319,9 +319,9 @@
       { name: "Chuka", ticket: "pending", legs: "Tanzania, Kenya", rwanda: "—", uganda: "—", tanzania: "DSM Unit 3", kenya: "Pendo Unit 10", costAud: 970 },
       { name: "Ernest", ticket: "pending", legs: "Tanzania, Kenya", rwanda: "—", uganda: "—", tanzania: "DSM Unit 3", kenya: "Pendo Unit 11", costAud: 970 },
       { name: "Dilligaf", ticket: "pending", legs: "Rwanda, Uganda, Tanzania", rwanda: "Kigali 4-BR Unit", uganda: "Kololo Unit 4", tanzania: "DSM Unit 4", kenya: "Excluded", costAud: 585 },
-      { name: "Toyeeb", ticket: "pending", legs: "All 4 Countries", rwanda: "Kigali 4-BR Unit", uganda: "Unassigned", tanzania: "DSM Unit 4", kenya: "Pendo Unit 12", costAud: 970 },
-      { name: "Fulloption", ticket: "pending", legs: "All 4 Countries", rwanda: "Unassigned", uganda: "Unassigned", tanzania: "Unassigned", kenya: "Unassigned", costAud: 0 },
-      { name: "Niyi", ticket: "pending", legs: "Tanzania, Kenya", rwanda: "—", uganda: "—", tanzania: "Unassigned", kenya: "Unassigned", costAud: 0 }
+      { name: "Toyeeb", ticket: "pending", legs: "All 4 Countries", rwanda: "Kigali 4-BR Unit", uganda: "Kololo Unit 5", tanzania: "DSM Unit 4", kenya: "Pendo Unit 12", costAud: 1205 },
+      { name: "Fulloption", ticket: "pending", legs: "All 4 Countries", rwanda: "Unassigned", uganda: "Kololo Unit 5 (Open)", tanzania: "Standby", kenya: "Unassigned", costAud: 0 },
+      { name: "Niyi", ticket: "pending", legs: "Tanzania, Kenya", rwanda: "—", uganda: "—", tanzania: "Standby", kenya: "Unassigned", costAud: 0 }
     ];
 
     // COUNTRY DATA MATRIX WITH VISAS & LINKS
@@ -357,9 +357,9 @@
       },
       uganda: {
         flag: "🇺🇬", name: "Uganda (Kampala)", dates: "Jul 09 – Jul 12 (3 Nights)",
-        statusTag: "1 Extra 2-BR Unit Required", statusClass: "bg-amber-500/20 text-amber-400",
+        statusTag: "Fully Booked (5 Units Confirmed)", statusClass: "bg-emerald-500/20 text-emerald-400",
         properties: [
-          { name: "Kololo 2-Bedroom Apartment Block (4 Units Booked)", link: "https://www.airbnb.com.au/rooms/992772718929728730", guests: ["Unit 1: Adewale 🔒 & Akeem ⏳", "Unit 2: Sheriff 🔒 & Nick ⏳", "Unit 3: Charles ⏳ & Anthony ⏳", "Unit 4: Olumide ⏳ & Dilligaf ⏳"], audPp: 235 }
+          { name: "Kololo 2-Bedroom Apartment Block (5 Units Booked)", link: "https://www.airbnb.com.au/rooms/992772718929728730", guests: ["Unit 1 (Booked via Akeem's Airbnb): Adewale 🔒 & Akeem ⏳", "Unit 2: Sheriff 🔒 & Nick ⏳", "Unit 3: Charles ⏳ & Anthony ⏳", "Unit 4: Olumide ⏳ & Dilligaf ⏳", "Unit 5 (New): Toyeeb ⏳ & Open / Fulloption ⏳"], audPp: 235 }
         ],
         visas: [
           { title: "Mandatory Single-Entry e-Visa", cost: "$50 USD (~$72 AUD)", link: "https://visas.immigration.go.ug/", desc: "Must apply online 4–6 weeks in advance. No visas issued on arrival at Entebbe Airport." },
@@ -383,9 +383,9 @@
       },
       tanzania: {
         flag: "🇹🇿", name: "Tanzania (Dar es Salaam)", dates: "Jul 12 – Jul 15 (3 Nights)",
-        statusTag: "1 Extra Unit Required", statusClass: "bg-amber-500/20 text-amber-400",
+        statusTag: "Fully Booked (13 BR Confirmed)", statusClass: "bg-emerald-500/20 text-emerald-400",
         properties: [
-          { name: "Dar es Salaam Apartments (3x 3-BR + 1x 4-BR)", link: "https://www.airbnb.com.au/rooms/1174483643076432401", guests: ["Unit 1 (3 BR): Adewale 🔒, Akeem ⏳, Sheriff 🔒", "Unit 2 (3 BR): Saheed ⏳, Nick ⏳, Charles ⏳", "Unit 3 (3 BR): Ernest ⏳, Chuka ⏳, Anthony ⏳", "Unit 4 (4 BR): Olumide ⏳, Pikezer Eze ⏳, Dilligaf ⏳, Toyeeb ⏳"], audPp: 350 }
+          { name: "Dar es Salaam Apartments (3x 3-BR + 1x 4-BR)", link: "https://www.airbnb.com.au/rooms/1174483643076432401", guests: ["Unit 1 (3 BR): Adewale 🔒, Akeem ⏳, Sheriff 🔒", "Unit 2 (3 BR): Saheed ⏳, Nick ⏳, Charles ⏳", "Unit 3 (3 BR): Ernest ⏳, Chuka ⏳, Anthony ⏳", "Unit 4 (4 BR): Olumide ⏳, Pikezer Eze ⏳, Dilligaf ⏳, Toyeeb ⏳", "*Standby (Undecided): Niyi ⏳, Fulloption ⏳*"], audPp: 350 }
         ],
         visas: [
           { title: "Tanzania Single-Entry e-Visa", cost: "$50 USD (~$72 AUD)", link: "https://visa.immigration.go.tz/", desc: "Apply online 3–4 weeks prior to bypass arrival queues at Dar Airport." },
@@ -409,7 +409,7 @@
       },
       kenya: {
         flag: "🇰🇪", name: "Kenya (Nairobi)", dates: "Jul 15 – Jul 20 (5 Nights)",
-        statusTag: "Surplus (+6 Units Open)", statusClass: "bg-blue-500/20 text-blue-400",
+        statusTag: "Surplus (+8 Units Open)", statusClass: "bg-blue-500/20 text-blue-400",
         properties: [
           { name: "Pendo Luxury Apartments (20 Private 1-BR Units Booked)", link: "https://www.booking.com/Share-iKgwBd", guests: ["Assigned (12): Adewale 🔒, Akeem ⏳, Sheriff 🔒, Anthony ⏳, Olumide ⏳, Charles 🔒, Nick 🔒, Saheed ⏳, Pikezer Eze ⏳, Chuka ⏳, Ernest ⏳, Toyeeb ⏳", "Unassigned / Surplus (8 Units Open): Niyi ⏳, Fulloption ⏳ (+6 Spare Units Open)"], audPp: 620 }
         ],
