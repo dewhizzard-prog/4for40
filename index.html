@@ -167,14 +167,26 @@
       <!-- Dynamic JS Content Injected Here -->
     </div>
 
-    <!-- MASTER GUEST ACCOMMODATION MATRIX (OPTIMIZED FOR MOBILE PAGE SCROLL) -->
+    <!-- RESTRUCTURED MOBILE-FRIENDLY GUEST ALLOCATION & COST SUMMARY -->
     <section class="glass-card p-4 sm:p-6 rounded-2xl space-y-4">
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4">
-        <div>
-          <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-bed text-blue-400"></i> Master Guest Allocation & Cost Summary
-          </h2>
-          <p class="text-[11px] sm:text-xs text-slate-400">Individual accommodation expense totals and flight ticket status per guest</p>
+        <div class="flex justify-between items-center w-full lg:w-auto">
+          <div>
+            <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-users-rectangle text-blue-400"></i> Master Guest Cost & Allocation Summary
+            </h2>
+            <p class="text-[11px] sm:text-xs text-slate-400">Individual accommodation totals and room allocations per guest</p>
+          </div>
+          
+          <!-- VIEW TOGGLE BUTTON (CARD GRID VS TABLE) -->
+          <div class="flex bg-slate-900 p-1 rounded-lg border border-slate-800 text-[11px] font-bold">
+            <button onclick="setRosterView('cards')" id="view-cards-btn" class="px-2.5 py-1 rounded-md bg-blue-600 text-white flex items-center gap-1">
+              <i class="fa-solid fa-grip-vertical text-[10px]"></i> Cards
+            </button>
+            <button onclick="setRosterView('table')" id="view-table-btn" class="px-2.5 py-1 rounded-md text-slate-400 hover:text-white flex items-center gap-1">
+              <i class="fa-solid fa-table text-[10px]"></i> Table
+            </button>
+          </div>
         </div>
 
         <!-- MULTI-ATTRIBUTE FILTERS -->
@@ -193,25 +205,31 @@
         </div>
       </div>
 
-      <!-- TABLE CONTAINER WITH HEIGHT CAP & DUAL AXIS SCROLL -->
-      <div class="overflow-x-auto max-h-[55vh] sm:max-h-none overflow-y-auto rounded-xl border border-slate-800/80 touch-pan-x">
+      <!-- VIEW 1: GUEST CARDS GRID (DEFAULT - OPTIMIZED FOR MOBILE SCROLLING) -->
+      <div id="rosterCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <!-- JS Populated Guest Cards -->
+      </div>
+
+      <!-- VIEW 2: TRADITIONAL TABLE (DESKTOP TOGGLE) -->
+      <div id="rosterTableContainer" class="hidden overflow-x-auto rounded-xl border border-slate-800/80">
         <table class="w-full text-left text-xs text-slate-300 min-w-[640px]" id="rosterTable">
-          <thead class="bg-slate-900 sticky top-0 z-10 text-slate-400 uppercase text-[10px] font-bold tracking-wider shadow-md">
+          <thead class="bg-slate-900 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
             <tr>
-              <th class="p-3 bg-slate-900">Guest</th>
-              <th class="p-3 bg-slate-900">Ticket Status</th>
-              <th class="p-3 bg-slate-900">🇷🇼 Kigali</th>
-              <th class="p-3 bg-slate-900">🇺🇬 Kampala</th>
-              <th class="p-3 bg-slate-900">🇹🇿 Dar es Salaam</th>
-              <th class="p-3 bg-slate-900">🇰🇪 Nairobi</th>
-              <th class="p-3 text-right bg-slate-900">Est. Total Cost</th>
+              <th class="p-3">Guest</th>
+              <th class="p-3">Ticket Status</th>
+              <th class="p-3">🇷🇼 Kigali</th>
+              <th class="p-3">🇺🇬 Kampala</th>
+              <th class="p-3">🇹🇿 Dar es Salaam</th>
+              <th class="p-3">🇰🇪 Nairobi</th>
+              <th class="p-3 text-right">Est. Total Cost</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-800/60 font-medium" id="matrixTableBody">
-            <!-- JS Populated Matrix -->
+            <!-- JS Populated Table -->
           </tbody>
         </table>
       </div>
+
       <p class="text-[10px] sm:text-[11px] text-slate-500 italic">*Excludes unassigned or self-sorting legs where room bookings are handled independently or pending unit confirmation.</p>
     </section>
 
@@ -283,6 +301,7 @@
     const fxRates = { AUD: 1.0, USD: 0.694, CAD: 0.986, GBP: 0.524, CHF: 0.576, NGN: 923.23 };
     const fxSymbols = { AUD: '$', USD: '$', CAD: '$', GBP: '£', CHF: 'Fr', NGN: '₦' };
     let currentFX = 'AUD';
+    let currentRosterView = 'cards';
 
     // ACTIVE TRAVELERS DATA
     const activeTravelers = [
@@ -420,11 +439,62 @@
 
     let activeSubtabs = { rwanda: 'rooms', uganda: 'rooms', tanzania: 'rooms', kenya: 'rooms' };
 
-    function renderMatrixTable() {
+    function renderMatrixView() {
       const rate = fxRates[currentFX];
       const symbol = fxSymbols[currentFX];
-      const tbody = document.getElementById('matrixTableBody');
 
+      // 1. RENDER GUEST CARDS (MOBILE OPTIMIZED)
+      const cardsContainer = document.getElementById('rosterCardsContainer');
+      cardsContainer.innerHTML = activeTravelers.map(t => {
+        const ticketBadge = t.ticket === 'locked' 
+          ? `<span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1"><i class="fa-solid fa-lock text-[8px]"></i> Locked</span>`
+          : `<span class="bg-amber-500/20 text-amber-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-amber-500/30 flex items-center gap-1"><i class="fa-solid fa-clock text-[8px]"></i> Pending</span>`;
+
+        const convertedCost = t.costAud > 0 
+          ? `${symbol}${(t.costAud * rate).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${currentFX}`
+          : (t.rwanda === 'Self-Sorting' ? 'Self-Sorted' : 'Pending');
+
+        return `
+          <div class="glass-card p-4 rounded-xl space-y-3" data-guest="${t.name.toLowerCase()}" data-rwanda="${t.rwanda.toLowerCase()}" data-uganda="${t.uganda.toLowerCase()}" data-tanzania="${t.tanzania.toLowerCase()}" data-kenya="${t.kenya.toLowerCase()}">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+              <div>
+                <h4 class="font-bold text-white text-sm">${t.name}</h4>
+                <span class="text-[10px] text-slate-400">${t.legs}</span>
+              </div>
+              ${ticketBadge}
+            </div>
+
+            <!-- COUNTRY ROOM ALLOCATION BREAKDOWN -->
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                <span class="text-[9px] text-slate-400 font-bold block uppercase">🇷🇼 Kigali</span>
+                <span class="font-semibold ${t.rwanda.includes('Avaia') || t.rwanda.includes('Block') || t.rwanda.includes('4-BR') ? 'text-emerald-400' : 'text-slate-300'}">${t.rwanda}</span>
+              </div>
+              <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                <span class="text-[9px] text-slate-400 font-bold block uppercase">🇺🇬 Kampala</span>
+                <span class="font-semibold ${t.uganda.includes('Kololo') ? 'text-emerald-400' : 'text-slate-300'}">${t.uganda}</span>
+              </div>
+              <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                <span class="text-[9px] text-slate-400 font-bold block uppercase">🇹🇿 Dar es Salaam</span>
+                <span class="font-semibold ${t.tanzania.includes('DSM') ? 'text-emerald-400' : 'text-slate-300'}">${t.tanzania}</span>
+              </div>
+              <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-800">
+                <span class="text-[9px] text-slate-400 font-bold block uppercase">🇰🇪 Nairobi</span>
+                <span class="font-semibold ${t.kenya.includes('Pendo') ? 'text-emerald-400' : 'text-slate-300'}">${t.kenya}</span>
+              </div>
+            </div>
+
+            <!-- EST COST FOOTER -->
+            <div class="pt-2 border-t border-slate-800 flex justify-between items-center text-xs">
+              <span class="text-slate-400 font-medium">Est. Accom Total:</span>
+              <span class="font-bold text-blue-400">${convertedCost}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 2. RENDER TRADITIONAL TABLE (FOR TABLE VIEW)
+      const tbody = document.getElementById('matrixTableBody');
       tbody.innerHTML = activeTravelers.map(t => {
         const ticketBadge = t.ticket === 'locked' 
           ? `<span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1 w-fit"><i class="fa-solid fa-lock text-[9px]"></i> Locked IN</span>`
@@ -448,11 +518,52 @@
       }).join('');
     }
 
+    function setRosterView(view) {
+      currentRosterView = view;
+      const cardsBtn = document.getElementById('view-cards-btn');
+      const tableBtn = document.getElementById('view-table-btn');
+      const cardsContainer = document.getElementById('rosterCardsContainer');
+      const tableContainer = document.getElementById('rosterTableContainer');
+
+      if (view === 'cards') {
+        cardsBtn.className = "px-2.5 py-1 rounded-md bg-blue-600 text-white flex items-center gap-1";
+        tableBtn.className = "px-2.5 py-1 rounded-md text-slate-400 hover:text-white flex items-center gap-1";
+        cardsContainer.classList.remove('hidden');
+        tableContainer.classList.add('hidden');
+      } else {
+        tableBtn.className = "px-2.5 py-1 rounded-md bg-blue-600 text-white flex items-center gap-1";
+        cardsBtn.className = "px-2.5 py-1 rounded-md text-slate-400 hover:text-white flex items-center gap-1";
+        tableContainer.classList.remove('hidden');
+        cardsContainer.classList.add('hidden');
+      }
+    }
+
     function filterRoster() {
       const guestQ = document.getElementById('rosterSearch').value.toLowerCase().trim();
       const accomQ = document.getElementById('accomSearch').value.toLowerCase().trim();
       const countryQ = document.getElementById('countryFilter').value;
 
+      // Filter Cards View
+      document.querySelectorAll('#rosterCardsContainer > div').forEach(card => {
+        const guestName = card.getAttribute('data-guest') || '';
+        const rwanda = card.getAttribute('data-rwanda') || '';
+        const uganda = card.getAttribute('data-uganda') || '';
+        const tanzania = card.getAttribute('data-tanzania') || '';
+        const kenya = card.getAttribute('data-kenya') || '';
+
+        const matchesGuest = guestName.includes(guestQ);
+        const matchesAccom = accomQ === '' || rwanda.includes(accomQ) || uganda.includes(accomQ) || tanzania.includes(accomQ) || kenya.includes(accomQ);
+
+        let matchesCountry = true;
+        if (countryQ === 'rwanda') matchesCountry = rwanda !== '—' && rwanda !== '';
+        else if (countryQ === 'uganda') matchesCountry = uganda !== '—' && uganda !== '';
+        else if (countryQ === 'tanzania') matchesCountry = tanzania !== '—' && tanzania !== '';
+        else if (countryQ === 'kenya') matchesCountry = kenya !== '—' && kenya !== '' && !kenya.includes('excluded');
+
+        card.style.display = (matchesGuest && matchesAccom && matchesCountry) ? '' : 'none';
+      });
+
+      // Filter Table View
       document.querySelectorAll('#matrixTableBody tr').forEach(row => {
         const guestName = row.getAttribute('data-guest') || '';
         const rwanda = row.getAttribute('data-rwanda') || '';
@@ -469,11 +580,7 @@
         else if (countryQ === 'tanzania') matchesCountry = tanzania !== '—' && tanzania !== '';
         else if (countryQ === 'kenya') matchesCountry = kenya !== '—' && kenya !== '' && !kenya.includes('excluded');
 
-        if (matchesGuest && matchesAccom && matchesCountry) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
-        }
+        row.style.display = (matchesGuest && matchesAccom && matchesCountry) ? '' : 'none';
       });
     }
 
@@ -613,7 +720,7 @@
       currentFX = curr;
       document.getElementById('currencySelector').value = curr;
       document.getElementById('currencySelectorMobile').value = curr;
-      renderMatrixTable();
+      renderMatrixView();
       const activeTab = document.querySelector('.tab-active').id.replace('tab-', '');
       renderCountryView(activeTab);
     }
@@ -666,7 +773,7 @@
     }
 
     // Initial Load
-    renderMatrixTable();
+    renderMatrixView();
     renderCountryView('rwanda');
   </script>
 </body>
