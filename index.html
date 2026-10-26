@@ -37,7 +37,7 @@
           </div>
         </div>
 
-        <!-- MOBILE CURRENCY TOGGLE (SHOWS TOP RIGHT ON MOBILE) -->
+        <!-- MOBILE CURRENCY TOGGLE -->
         <div class="md:hidden flex items-center bg-slate-800/90 rounded-lg p-1 border border-slate-700">
           <select id="currencySelectorMobile" onchange="changeCurrency(this.value)" class="bg-slate-900 text-blue-400 font-bold text-xs rounded px-2 py-1 border border-slate-700 focus:outline-none">
             <option value="AUD">AUD ($)</option>
@@ -50,7 +50,7 @@
         </div>
       </div>
 
-      <!-- COUNTDOWN TIMER (ENLARGED +25%, MONTHS WEEKS DAYS HOURS) -->
+      <!-- COUNTDOWN TIMER -->
       <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-900/90 border border-blue-500/30 px-3 sm:px-4 py-1.5 rounded-xl shadow-inner w-full md:w-auto justify-center">
         <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 flex items-center gap-1">
           <i class="fa-solid fa-plane-departure text-amber-400"></i> Launch:
@@ -106,7 +106,6 @@
     <!-- TOP METRICS GRID -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
       
-      <!-- CLICKABLE ACTIVE TRAVELERS CARD -->
       <div onclick="openTravelersModal()" class="glass-card glass-card-hover p-3.5 sm:p-5 rounded-2xl cursor-pointer group relative overflow-hidden">
         <div class="flex justify-between items-start mb-1 sm:mb-2">
           <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Active Travelers</span>
@@ -168,8 +167,8 @@
       <!-- Dynamic JS Content Injected Here -->
     </div>
 
-    <!-- MASTER GUEST ACCOMMODATION MATRIX -->
-    <section class="glass-card p-4 sm:p-6 rounded-2xl space-y-4 sm:space-y-6">
+    <!-- MASTER GUEST ACCOMMODATION MATRIX (OPTIMIZED FOR MOBILE PAGE SCROLL) -->
+    <section class="glass-card p-4 sm:p-6 rounded-2xl space-y-4">
       <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4">
         <div>
           <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
@@ -194,17 +193,18 @@
         </div>
       </div>
 
-      <div class="overflow-x-auto touch-pan-x">
+      <!-- TABLE CONTAINER WITH HEIGHT CAP & DUAL AXIS SCROLL -->
+      <div class="overflow-x-auto max-h-[55vh] sm:max-h-none overflow-y-auto rounded-xl border border-slate-800/80 touch-pan-x">
         <table class="w-full text-left text-xs text-slate-300 min-w-[640px]" id="rosterTable">
-          <thead class="bg-slate-900/80 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
+          <thead class="bg-slate-900 sticky top-0 z-10 text-slate-400 uppercase text-[10px] font-bold tracking-wider shadow-md">
             <tr>
-              <th class="p-3 rounded-l-lg">Guest</th>
-              <th class="p-3">Ticket Status</th>
-              <th class="p-3">🇷🇼 Kigali</th>
-              <th class="p-3">🇺🇬 Kampala</th>
-              <th class="p-3">🇹🇿 Dar es Salaam</th>
-              <th class="p-3">🇰🇪 Nairobi</th>
-              <th class="p-3 text-right rounded-r-lg">Est. Total Cost</th>
+              <th class="p-3 bg-slate-900">Guest</th>
+              <th class="p-3 bg-slate-900">Ticket Status</th>
+              <th class="p-3 bg-slate-900">🇷🇼 Kigali</th>
+              <th class="p-3 bg-slate-900">🇺🇬 Kampala</th>
+              <th class="p-3 bg-slate-900">🇹🇿 Dar es Salaam</th>
+              <th class="p-3 bg-slate-900">🇰🇪 Nairobi</th>
+              <th class="p-3 text-right bg-slate-900">Est. Total Cost</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-800/60 font-medium" id="matrixTableBody">
@@ -246,16 +246,13 @@
   </div>
 
   <script>
-    // ACCURATE MONTHS, WEEKS, DAYS, HOURS COUNTDOWN LOGIC
-    const departureDate = new Date('July 6, 2027 00:00:00').getTime();
-
+    // COUNTDOWN LOGIC
     function updateCountdown() {
       const now = new Date();
       const target = new Date('July 6, 2027 00:00:00');
 
       if (now < target) {
         let months = (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth());
-        
         let tempDate = new Date(now.getFullYear(), now.getMonth() + months, now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
         if (tempDate > target) {
           months--;
@@ -282,7 +279,7 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // CURRENCY CONVERSION RATES (Base: AUD)
+    // CURRENCY CONVERSION RATES
     const fxRates = { AUD: 1.0, USD: 0.694, CAD: 0.986, GBP: 0.524, CHF: 0.576, NGN: 923.23 };
     const fxSymbols = { AUD: '$', USD: '$', CAD: '$', GBP: '£', CHF: 'Fr', NGN: '₦' };
     let currentFX = 'AUD';
@@ -308,7 +305,7 @@
       { name: "Niyi", ticket: "pending", legs: "Tanzania, Kenya", rwanda: "—", uganda: "—", tanzania: "Unassigned", kenya: "Unassigned", costAud: 0 }
     ];
 
-    // COUNTRY DATA MATRIX WITH EMBEDDED PROPERTY LINKS
+    // COUNTRY DATA MATRIX WITH VISAS & LINKS
     const countryData = {
       rwanda: {
         flag: "🇷🇼", name: "Rwanda (Kigali)", dates: "Jul 06 – Jul 09 (3 Nights)",
@@ -317,6 +314,10 @@
           { name: "Avaia - Private 3 BR Residence", link: "https://www.airbnb.com.au/rooms/1611457630423220239", guests: ["Adewale 🔒", "Sheriff 🔒", "Akeem ⏳"], audPp: 400 },
           { name: "Kigali Combined Block (3 BR)", link: "https://www.airbnb.com.au/rooms/1742683478719031917", guests: ["Nick ⏳", "Anthony ⏳", "Charles ⏳"], audPp: 316.67 },
           { name: "4-Bedroom Unit (Confirmed by Host)", link: "https://www.airbnb.com.au/rooms/1446485293192029182?source_impression_id=p3_1792496178_P3b0dQHSuSKtEUe_", guests: ["Dilligaf ⏳", "Toyeeb ⏳", "Spare Room 1", "Spare Room 2"], audPp: 280 }
+        ],
+        visas: [
+          { title: "Commonwealth / AU / Francophonie Waiver", cost: "$0 USD ($0 AUD)", link: "https://www.irembo.gov.rw/", desc: "Free 30-day visa on arrival for Australian, UK, Canadian, Nigerian, & Swiss passport holders." },
+          { title: "Standard Visa on Arrival", cost: "$50 USD (~$72 AUD)", link: "https://www.irembo.gov.rw/", desc: "Available at Kigali Airport for all non-exempt passport holders." }
         ],
         games: [
           { title: "Kigali Go-Kart Time Trial 🏎️", category: "Go-Karting", points: "25 Pts", desc: "Round 1 qualifier time trials at Kigali Karting track." },
@@ -341,6 +342,10 @@
         properties: [
           { name: "Kololo 2-Bedroom Apartment Block (4 Units Booked)", link: "https://www.airbnb.com.au/rooms/992772718929728730", guests: ["Unit 1: Adewale 🔒 & Akeem ⏳", "Unit 2: Sheriff 🔒 & Nick ⏳", "Unit 3: Charles ⏳ & Anthony ⏳", "Unit 4: Olumide ⏳ & Dilligaf ⏳"], audPp: 235 }
         ],
+        visas: [
+          { title: "Mandatory Single-Entry e-Visa", cost: "$50 USD (~$72 AUD)", link: "https://visas.immigration.go.ug/", desc: "Must apply online 4–6 weeks in advance. No visas issued on arrival at Entebbe Airport." },
+          { title: "Yellow Fever Health Clearance", cost: "Mandatory Card", link: "#", desc: "Physical Yellow Card strictly verified by health officials upon landing." }
+        ],
         games: [
           { title: "Kampala Go-Kart Grand Prix 🏎️", category: "Go-Karting", points: "35 Pts", desc: "Round 2 championship sprint race with podium trophies." },
           { title: "Nile Quad Biking & Endurance Sprint 🏃‍♂️", category: "Fitness", points: "20 Pts", desc: "Jinja Nile bank obstacle sprint challenge." },
@@ -363,6 +368,10 @@
         properties: [
           { name: "Dar es Salaam Apartments (3x 3-BR + 1x 4-BR)", link: "https://www.airbnb.com.au/rooms/1174483643076432401", guests: ["Unit 1 (3 BR): Adewale 🔒, Akeem ⏳, Sheriff 🔒", "Unit 2 (3 BR): Saheed ⏳, Nick ⏳, Charles ⏳", "Unit 3 (3 BR): Ernest ⏳, Chuka ⏳, Anthony ⏳", "Unit 4 (4 BR): Olumide ⏳, Pikezer Eze ⏳, Dilligaf ⏳, Toyeeb ⏳"], audPp: 350 }
         ],
+        visas: [
+          { title: "Tanzania Single-Entry e-Visa", cost: "$50 USD (~$72 AUD)", link: "https://visa.immigration.go.tz/", desc: "Apply online 3–4 weeks prior to bypass arrival queues at Dar Airport." },
+          { title: "Mandatory Inbound Travel Insurance", cost: "$44 USD (~$63 AUD)", link: "https://visittanzania.nicinsurance.co.tz/", desc: "Mandatory policy required for all visitors before crossing border control." }
+        ],
         games: [
           { title: "Dar Coastal Go-Kart Showdown 🏎️", category: "Go-Karting", points: "30 Pts", desc: "Round 3 coastal track showdown near Slipway." },
           { title: "Mbudya Beach Olympics 🏝️", category: "Fitness", points: "25 Pts", desc: "Beach tug-of-war, sprint relay, and swimming race." },
@@ -384,6 +393,9 @@
         statusTag: "Surplus (+6 Units Open)", statusClass: "bg-blue-500/20 text-blue-400",
         properties: [
           { name: "Pendo Luxury Apartments (20 Private 1-BR Units Booked)", link: "https://www.booking.com/Share-iKgwBd", guests: ["Assigned (12): Adewale 🔒, Akeem ⏳, Sheriff 🔒, Anthony ⏳, Olumide ⏳, Charles 🔒, Nick 🔒, Saheed ⏳, Pikezer Eze ⏳, Chuka ⏳, Ernest ⏳, Toyeeb ⏳", "Unassigned / Surplus (8 Units Open): Niyi ⏳, Fulloption ⏳ (+6 Spare Units Open)"], audPp: 620 }
+        ],
+        visas: [
+          { title: "Kenya Electronic Travel Authorization (eTA)", cost: "~$30 USD (~$43 AUD)", link: "https://www.etakenya.go.ke/", desc: "Apply online 7–10 days before landing in Nairobi." }
         ],
         games: [
           { title: "Nairobi Go-Kart Grand Final 🏎️", category: "Go-Karting", points: "50 Pts (Double)", desc: "The ultimate tour championship decider at GP Karting / Two Rivers." },
@@ -436,7 +448,6 @@
       }).join('');
     }
 
-    // MULTI-ATTRIBUTE FILTER FUNCTION
     function filterRoster() {
       const guestQ = document.getElementById('rosterSearch').value.toLowerCase().trim();
       const accomQ = document.getElementById('accomSearch').value.toLowerCase().trim();
@@ -509,6 +520,17 @@
         `;
       }).join('');
 
+      let visasHtml = (data.visas || []).map(v => `
+        <div class="glass-card p-4 rounded-xl border-l-4 border-emerald-400 space-y-1.5">
+          <div class="flex justify-between items-center">
+            <h5 class="text-xs sm:text-sm font-bold text-white">${v.title}</h5>
+            <span class="text-xs font-extrabold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">${v.cost}</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">${v.desc}</p>
+          ${v.link !== '#' ? `<a href="${v.link}" target="_blank" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold inline-flex items-center gap-1 pt-1"><i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> Apply Official Portal</a>` : ''}
+        </div>
+      `).join('');
+
       let gamesHtml = data.games.map(item => `
         <div class="glass-card p-4 rounded-xl border-l-4 border-indigo-500 space-y-1">
           <div class="flex justify-between items-center">
@@ -542,6 +564,7 @@
 
       let activeContent = '';
       if(activeSub === 'rooms') activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">${propertiesHtml}</div>`;
+      else if(activeSub === 'visas') activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">${visasHtml}</div>`;
       else if(activeSub === 'games') activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">${gamesHtml}</div>`;
       else if(activeSub === 'highlights') activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">${highlightsHtml}</div>`;
       else if(activeSub === 'itinerary') activeContent = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">${itineraryHtml}</div>`;
@@ -565,6 +588,9 @@
             <button onclick="switchSubtab('${countryKey}', 'rooms')" class="px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'rooms' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
               <i class="fa-solid fa-bed mr-1.5"></i> Rooms
             </button>
+            <button onclick="switchSubtab('${countryKey}', 'visas')" class="px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'visas' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
+              <i class="fa-solid fa-passport mr-1.5"></i> 🛂 Visas & Entry
+            </button>
             <button onclick="switchSubtab('${countryKey}', 'games')" class="px-3 sm:px-4 py-2 rounded-lg text-xs font-bold transition-all whitespace-nowrap ${activeSub === 'games' ? 'subtab-active' : 'bg-slate-800/60 text-slate-400 hover:text-white'}">
               <i class="fa-solid fa-gamepad mr-1.5"></i> Games
             </button>
@@ -576,7 +602,6 @@
             </button>
           </div>
 
-          <!-- SUBTAB CONTENT -->
           ${activeContent}
         </div>
       `;
